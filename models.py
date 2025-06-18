@@ -54,14 +54,56 @@ class Python:
 
     def draw(self,surface):
         
-        blit_position = self.segments[0].position * self.cell_size + Vector2(PADDING)            
-        surface.blit(self.head_sprite,blit_position)
-        for segment in self.segments[1:-1]:
-            blit_position = segment.position * self.cell_size + Vector2(PADDING)            
-            surface.blit(self.body_sprite,blit_position)
-        blit_position = self.segments[-1].position * self.cell_size + Vector2(PADDING)            
-        surface.blit(self.tail_sprite,blit_position)
+        blit_position = self.segments[0].position * self.cell_size + Vector2(PADDING)
+        match self.segments[0].to_dir:
+            case "RIGHT":
+                surface.blit(self.head_sprite,blit_position)
+            case "UP":
+                surface.blit(pygame.transform.rotate(self.head_sprite,90),blit_position)
+            case "LEFT":
+                surface.blit(pygame.transform.rotate(self.head_sprite,180),blit_position)
+            case "DOWN":
+                surface.blit(pygame.transform.rotate(self.head_sprite,270),blit_position)          
 
+        for segment in self.segments[1:-1]:
+            blit_position = segment.position * self.cell_size + Vector2(PADDING)
+            match segment.from_dir,segment.to_dir:
+                case "RIGHT", "UP":
+                    surface.blit(self.swing_sprite,blit_position)
+                case "RIGHT", "RIGHT":
+                    surface.blit(self.body_sprite,blit_position)
+                case "RIGHT", "DOWN":
+                    surface.blit(pygame.transform.rotate(self.swing_sprite,90),blit_position)
+                case "UP", "UP":
+                    surface.blit(pygame.transform.rotate(self.body_sprite,90),blit_position)
+                case "UP", "RIGHT":
+                    surface.blit(pygame.transform.rotate(self.swing_sprite,180),blit_position)
+                case "UP", "LEFT":
+                    surface.blit(pygame.transform.rotate(self.swing_sprite,90),blit_position)
+                case "DOWN", "DOWN":
+                    surface.blit(pygame.transform.rotate(self.body_sprite,90),blit_position)
+                case "DOWN", "RIGHT":
+                    surface.blit(pygame.transform.rotate(self.swing_sprite,270),blit_position)
+                case "DOWN", "LEFT":
+                    surface.blit(self.swing_sprite,blit_position)
+                case "LEFT", "UP":
+                    surface.blit(pygame.transform.rotate(self.swing_sprite,270),blit_position)
+                case "LEFT", "LEFT":
+                    surface.blit(self.body_sprite,blit_position)
+                case "LEFT", "DOWN":
+                    surface.blit(pygame.transform.rotate(self.swing_sprite,180),blit_position)
+            
+        blit_position = self.segments[-1].position * self.cell_size + Vector2(PADDING)
+        match self.segments[-1].to_dir:
+            case "RIGHT":
+                surface.blit(self.tail_sprite,blit_position)
+            case "UP":
+                surface.blit(pygame.transform.rotate(self.tail_sprite,90),blit_position)
+            case "LEFT":
+                surface.blit(pygame.transform.rotate(self.tail_sprite,180),blit_position)
+            case "DOWN":
+                surface.blit(pygame.transform.rotate(self.tail_sprite,270),blit_position)       
+        
     def move(self, apple):
         new_head_position = self.next_position(self.direction,self.segments[0].position)
         if new_head_position == apple.position:
@@ -78,8 +120,9 @@ class Python:
             self.add_new_apple(new_apple)            
         else:
             self.segments.pop()
-        self.segments.insert(0,Segment(new_head_position,self.prev_direction,self.direction))
+        self.segments.insert(0,Segment(new_head_position,self.direction,self.direction))
         self.segments[1].to_dir = self.direction
+        self.prev_direction = self.direction
         
     def turn(self,new_direction):        
         match new_direction:
