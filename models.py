@@ -79,22 +79,26 @@ class Python:
         else:
             self.segments.pop()
         self.segments.insert(0,Segment(new_head_position,self.prev_direction,self.direction))
+        self.segments[1].to_dir = self.direction
         
-    def turn(self,new_direction):
-        for segment in self.segments:
-            match new_direction:
-                case "UP":
-                    if self.direction != "UP" and self.direction != "DOWN":
-                        self.direction = "UP"
-                case "DOWN":
-                    if self.direction != "UP" and self.direction != "DOWN":
-                        self.direction = "DOWN"
-                case "LEFT":
-                    if self.direction != "LEFT" and self.direction != "RIGHT":
-                        self.direction = "LEFT"
-                case "RIGHT":
-                    if self.direction != "LEFT" and self.direction != "RIGHT":
-                        self.direction = "RIGHT"
+    def turn(self,new_direction):        
+        match new_direction:
+            case "UP":
+                if self.direction != "UP" and self.direction != "DOWN":
+                    self.prev_direction = self.direction
+                    self.direction = "UP"
+            case "DOWN":
+                if self.direction != "UP" and self.direction != "DOWN":
+                    self.prev_direction = self.direction                    
+                    self.direction = "DOWN"
+            case "LEFT":
+                if self.direction != "LEFT" and self.direction != "RIGHT":
+                    self.prev_direction = self.direction                    
+                    self.direction = "LEFT"
+            case "RIGHT":
+                if self.direction != "LEFT" and self.direction != "RIGHT":
+                    self.prev_direction = self.direction                    
+                    self.direction = "RIGHT"
                                                 
     def next_position(self,direction,curr_position):
         match direction:
