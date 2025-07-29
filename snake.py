@@ -3,8 +3,8 @@ from utils import load_sprite
 from models import Python, Apple
 
 class Snake:
-    SQUARESIDE = 50
-    WIDTH = 16
+    SQUARESIDE = 80
+    WIDTH = 18
     HEIGHT = 10
     def __init__(self):
         pygame.init()
@@ -59,7 +59,7 @@ class Snake:
         self.python.draw(self.screen)
         self.apple.draw(self.screen)
         pygame.display.flip()
-        self.clock.tick(1)
+        self.clock.tick(1.25)
 
     def spawn_new_apple(self, new_apple):
         self.apple = new_apple
