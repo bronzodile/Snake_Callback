@@ -39,13 +39,13 @@ class Snake:
                         key_handled_this_turn = True
                     if event.key == pygame.K_DOWN:
                         self.python.turn("DOWN")
-                        key_handled_this_turn = True                    
+                        key_handled_this_turn = True
                     if event.key == pygame.K_LEFT:
                         self.python.turn("LEFT")
                         key_handled_this_turn = True
                     if event.key == pygame.K_RIGHT:
-                        self.python.turn("RIGHT")   
-                        key_handled_this_turn = True         
+                        self.python.turn("RIGHT")
+                        key_handled_this_turn = True
 
     def _game_logic(self):
         self.python.move(self.apple)
